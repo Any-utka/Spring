@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #F8BBD0;
+            filter: brightness(100%);
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            color: #D32F2F;
+        }
+        h2 {
+            color: #C2185B;
+        }
+        p {
+            font-size: 18px;
+        }
+        nav {
+            margin-top: 30px;
+        }
+        nav a {
+            margin: 0 20px;
+            text-decoration: none;
+            color: #1976D2;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #0288D1;
+            color: white;
+        }
+        .error-container {
+            background-color: #F44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Что-то пошло не так!</h1>
+<p>Произошла ошибка на сервере. Пожалуйста, попробуйте позже.</p>
+
+<div class="error-container">
+    <h2>Информация об ошибке:</h2>
+    <!-- Если сообщение пришло из контроллера -->
+    <p th:if="${errorMessage}" th:text="${errorMessage}">Произошла неизвестная ошибка.</p>
+
+    <!-- Если ошибка обрабатывается глобально (Spring Boot) -->
+    <p th:if="${status}" th:text="'Статус ошибки: ' + ${status}"></p>
+    <p th:if="${error}" th:text="'Ошибка: ' + ${error}"></p>
+    <p th:if="${message}" th:text="'Сообщение: ' + ${message}"></p>
+    <p th:if="${path}" th:text="'Путь: ' + ${path}"></p>
+</div>
+
+<nav>
+    <a th:href="@{/}">Главная</a>
+    <a th:href="@{/page/authors}">Авторы</a>
+    <a th:href="@{/page/books}">Книги</a>
+    <a th:href="@{/page/categories}">Категории</a>
+</nav>
+</body>
+</html>

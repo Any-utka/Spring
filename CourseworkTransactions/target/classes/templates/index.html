@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <style>
+        body {
+            background-color: #E8EAF6;
+            filter: brightness(90%);
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            margin: 50px;
+            color: #333;
+        }
+        h1 {
+            color: #673AB7;
+        }
+        p {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        nav {
+            margin-top: 40px;
+        }
+        nav a {
+            margin: 0 25px;
+            text-decoration: none;
+            color: #673AB7;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #7E57C2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h1>Добро пожаловать на сайт!</h1>
+<p>Выберите страницу для перехода:</p>
+
+<nav>
+    <a th:href="@{/page/authors}">Авторы</a>
+    <a th:href="@{/page/books}">Книги</a>
+    <a th:href="@{/page/categories}">Категории</a>
+</nav>
+</body>
+</html>

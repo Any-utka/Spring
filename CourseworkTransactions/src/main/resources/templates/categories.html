@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список категорий</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: linear-gradient(to right, #ede7f6, #d1c4e9);
+            color: #333;
+        }
+        h1 {
+            color: #4A148C;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            margin-top: 15px;
+            background-color: #7E57C2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5E35B1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th,
+        table td {
+            border: 1px solid #B39DDB;
+            padding: 12px;
+            text-align: left;
+        }
+        table th {
+            background-color: #9575CD;
+            color: white;
+        }
+        table tr:nth-child(even) {
+            background-color: #f3e5f5;
+        }
+        table tr:hover {
+            background-color: #D1C4E9;
+        }
+        nav {
+            margin-top: 40px;
+            text-align: center;
+        }
+        nav a {
+            font-size: 18px;
+            margin: 0 20px;
+            color: #4527A0;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .error-message, .error-list {
+            color: darkred;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Список категорий</h1>
+
+<!-- Форма для добавления категорий -->
+<form action="/categories/batchWithErrors" method="post">
+    <label for="categories">Введите названия категорий (каждое на новой строке):</label><br>
+    <textarea id="categories" name="categories" rows="5" cols="30" required></textarea><br>
+    <button type="submit">Добавить категории</button>
+</form>
+
+<!-- Таблица с категориями -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categories}">
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+            <form th:action="@{/categories/delete/{id}(id=${category.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Удалить категорию?')">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Навигация -->
+<nav>
+    <a th:href="@{/}">Главная</a>
+    <a th:href="@{/page/authors}">Авторы</a>
+    <a th:href="@{/page/books}">Книги</a>
+</nav>
+
+<!-- Сообщение об ошибке -->
+<div th:if="${error}" class="error-message">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- Сообщения об ошибках при пакетной вставке -->
+<div th:if="${errorMessages}" class="error-list">
+    <ul>
+        <li th:each="err : ${errorMessages}" th:text="${err}"></li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демонстрация авторов и уровней изоляции транзакций</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background: linear-gradient(to right, #ede7f6, #d1c4e9);
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #512da8;
+        }
+
+        .alert {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-alert {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .error-alert {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .closebtn {
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            color: inherit;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(80, 50, 120, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #9575cd;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        form {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f3e5f5;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(80, 50, 120, 0.2);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #b39ddb;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #673ab7;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        nav {
+            margin-top: 40px;
+            text-align: center;
+        }
+        nav a {
+            font-size: 18px;
+            margin: 0 20px;
+            color: #4527A0;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        button:hover {
+            background-color: #5e35b1;
+        }
+
+        a {
+            color: #512da8;
+            text-decoration: none;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Демонстрация авторов и уровней изоляции транзакций</h1>
+
+<!-- Всплывающее сообщение об успешной операции -->
+<div th:if="${successMessage != null}" class="alert success-alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <p th:text="${successMessage}"></p>
+</div>
+
+<!-- Всплывающее сообщение об ошибке -->
+<div th:if="${errorMessage != null}" class="alert error-alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<!-- Добавление нескольких авторов -->
+<h2>Добавить нескольких авторов</h2>
+<form action="/authors/multiple" method="post">
+    <label for="names">Введите имена авторов (по одному на строку):</label>
+    <textarea id="names" name="names" rows="5" required></textarea>
+    <button type="submit">Добавить авторов</button>
+</form>
+
+<!-- Редактирование -->
+<h2 th:if="${editingId != null}">Редактировать автора</h2>
+<form th:action="${editingId == null} ? @{/authors} : @{/authors/update/{id}(id=${editingId})}" method="post">
+    <input type="text" id="name" name="name" th:value="${editingName != null} ? ${editingName} : ''" placeholder="Имя автора" required>
+    <button type="submit">Сохранить</button>
+    <a th:if="${editingId != null}" th:href="@{/authors}">Отмена</a>
+</form>
+
+<!-- Список авторов -->
+<h2>Список авторов</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="author : ${authors}">
+        <td th:text="${author.id}">1</td>
+        <td th:text="${author.name}">Author Name</td>
+        <td>
+            <a th:href="@{/authors/edit/{id}(id=${author.id})}">Редактировать</a>
+            <form th:action="@{/authors/delete/{id}(id=${author.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Удалить автора?')">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!--&lt;!&ndash; Выбор уровня изоляции &ndash;&gt;-->
+<!--<h2>Выберите уровень изоляции:</h2>-->
+<!--<form action="/authors/test-isolation" method="post">-->
+<!--    <label for="isolationLevel">Выберите уровень изоляции:</label>-->
+<!--    <select id="isolationLevel" name="isolationLevel" required>-->
+<!--        <option value="READ_UNCOMMITTED">READ_UNCOMMITTED</option>-->
+<!--        <option value="READ_COMMITTED">READ_COMMITTED</option>-->
+<!--        <option value="SERIALIZABLE">SERIALIZABLE</option>-->
+<!--    </select>-->
+<!--    <button type="submit">Применить</button>-->
+<!--</form>-->
+<!--&lt;!&ndash; Всплывающее сообщение об успешной операции &ndash;&gt;-->
+<!--<div th:if="${successMessage != null}" class="alert success-alert">-->
+<!--    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>-->
+<!--    <p th:text="${successMessage}"></p>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Всплывающее сообщение об ошибке &ndash;&gt;-->
+<!--<div th:if="${errorMessage != null}" class="alert error-alert">-->
+<!--    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>-->
+<!--    <p th:text="${errorMessage}"></p>-->
+<!--</div>-->
+
+<!-- Результаты теста уровней изоляции -->
+<!--<h3>Результаты тестирования уровня изоляции</h3>-->
+<div>
+    <p th:text="${message}"></p>
+</div>
+<nav>
+    <a th:href="@{/}">Главная</a>
+    <a th:href="@{/page/books}">Книги</a>
+    <a th:href="@{/page/categories}">Категории</a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список книг</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 30px;
+            background: linear-gradient(to right, #ede7f6, #d1c4e9);
+            color: #333;
+        }
+        h1, h2 {
+            color: #4A148C;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            margin-top: 15px;
+            background-color: #7E57C2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5E35B1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #9575CD;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions a {
+            color: #6A1B9A;
+            text-decoration: none;
+        }
+        .actions button {
+            background-color: #FF5722;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .actions button:hover {
+            background-color: #E64A19;
+        }
+        nav {
+            margin-top: 40px;
+            text-align: center;
+        }
+        nav a {
+            font-size: 18px;
+            margin: 0 20px;
+            color: #4527A0;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Список книг</h1>
+
+<!-- Форма для добавления книги -->
+<form th:action="@{/books}" th:object="${book}" method="post">
+    <label for="title">Название книги:</label>
+    <input type="text" id="title" th:field="*{title}" placeholder="Введите название книги" required>
+
+    <label for="author">Автор:</label>
+    <select id="author" th:field="*{authorId}">
+        <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}">Автор</option>
+    </select>
+
+    <label for="publisher">Издатель:</label>
+    <select id="publisher" th:field="*{publisherId}">
+        <option th:each="publisher : ${publishers}" th:value="${publisher.id}" th:text="${publisher.name}">Издатель</option>
+    </select>
+
+    <label for="editCategoryIds">Категории:</label>
+    <select id="editCategoryIds" th:field="*{categoryIds}" required>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+    <button type="submit">Добавить книгу</button>
+</form>
+
+<!-- Таблица с книгами -->
+<table>
+    <thead>
+    <tr>
+        <th>Название</th>
+        <th>Автор</th>
+        <th>Издатель</th>
+        <th>Категории</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.authorName}"></td>
+        <td th:text="${book.publisherName}"></td>
+        <td>
+            <span th:each="category : ${book.categoryNames}" th:text="${category}"></span>
+        </td>
+        <td>
+            <a th:href="@{/books/update/{id}(id=${book.id})}">Редактировать</a>
+            <form th:action="@{/books/delete/{id}(id=${book.id})}" method="post" style="display:inline;">
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<nav>
+    <a th:href="@{/}">Главная</a>
+    <a th:href="@{/page/authors}">Авторы</a>
+    <a th:href="@{/page/categories}">Категории</a>
+</nav>
+</body>
+</html>
