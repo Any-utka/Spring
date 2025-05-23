@@ -53,19 +53,6 @@ public class CategoryController {
         return "categories";
     }
 
-
-    // Метод для пакетного добавления категорий без возврата ошибок
-   /* @PostMapping("/batchWithoutErrors")
-    public String addMultipleCategoriesWithoutErrors(@RequestParam List<String> categories, Model model) {
-        List<CategoryDTO> categoriesToAdd = new ArrayList<>();
-        for (String categoryName : categories) {
-            categoriesToAdd.add(new CategoryDTO(null, categoryName));
-        }
-
-        categoryService.addMultipleCategoriesWithoutReturningErrors(categoriesToAdd);
-        return "redirect:/categories";
-    }
-   */
     // Удаление категории
     @PostMapping("/delete/{id}")
     public String deleteCategory(@PathVariable Long id, Model model) {

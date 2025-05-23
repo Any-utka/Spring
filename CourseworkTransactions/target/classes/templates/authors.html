@@ -191,32 +191,6 @@
     </tr>
     </tbody>
 </table>
-
-<!--&lt;!&ndash; Выбор уровня изоляции &ndash;&gt;-->
-<!--<h2>Выберите уровень изоляции:</h2>-->
-<!--<form action="/authors/test-isolation" method="post">-->
-<!--    <label for="isolationLevel">Выберите уровень изоляции:</label>-->
-<!--    <select id="isolationLevel" name="isolationLevel" required>-->
-<!--        <option value="READ_UNCOMMITTED">READ_UNCOMMITTED</option>-->
-<!--        <option value="READ_COMMITTED">READ_COMMITTED</option>-->
-<!--        <option value="SERIALIZABLE">SERIALIZABLE</option>-->
-<!--    </select>-->
-<!--    <button type="submit">Применить</button>-->
-<!--</form>-->
-<!--&lt;!&ndash; Всплывающее сообщение об успешной операции &ndash;&gt;-->
-<!--<div th:if="${successMessage != null}" class="alert success-alert">-->
-<!--    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>-->
-<!--    <p th:text="${successMessage}"></p>-->
-<!--</div>-->
-
-<!--&lt;!&ndash; Всплывающее сообщение об ошибке &ndash;&gt;-->
-<!--<div th:if="${errorMessage != null}" class="alert error-alert">-->
-<!--    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>-->
-<!--    <p th:text="${errorMessage}"></p>-->
-<!--</div>-->
-
-<!-- Результаты теста уровней изоляции -->
-<!--<h3>Результаты тестирования уровня изоляции</h3>-->
 <div>
     <p th:text="${message}"></p>
 </div>

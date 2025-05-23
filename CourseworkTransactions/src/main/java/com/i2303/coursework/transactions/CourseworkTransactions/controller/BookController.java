@@ -62,7 +62,8 @@ public class BookController {
     @GetMapping("/update/{id}")
     public String updateBookForm(@PathVariable Long id, Model model) {
         BookDTO bookDTO = bookService.getBookById(id);
-        model.addAttribute("bookToEdit", bookDTO);
+        model.addAttribute ("id",id);
+        model.addAttribute("book", bookDTO);
         model.addAttribute("publishers", publisherRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("authors", authorRepository.findAll());
@@ -74,8 +75,10 @@ public class BookController {
                              @ModelAttribute BookDTO bookDTO,
                              BindingResult bindingResult,
                              Model model) {
+
+        System.out.println (bookDTO.toString ());
         if (bindingResult.hasErrors()) {
-            model.addAttribute("bookToEdit", bookDTO);
+            model.addAttribute("book", bookDTO);
             model.addAttribute("authors", authorRepository.findAll());
             return "books";
         }

@@ -111,7 +111,8 @@
 <h1>Список книг</h1>
 
 <!-- Форма для добавления книги -->
-<form th:action="@{/books}" th:object="${book}" method="post">
+<form th:action="@{${id} != null ? '/books/update/' + ${book.id} : '/books'}"
+      th:object="${book}" method="post">
     <label for="title">Название книги:</label>
     <input type="text" id="title" th:field="*{title}" placeholder="Введите название книги" required>
 
